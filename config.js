@@ -46,8 +46,6 @@ function buildDocsConfig(_config, spec) {
     config.paths.docs = helpers.preparePath(docsPath, spec.info.version);
     config.paths.spec = helpers.preparePath(specPath, spec.info.version);
 
-    console.log(config.paths)
-
     return config
 }
 
