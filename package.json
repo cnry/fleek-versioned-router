@@ -9,8 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "fleek-parser": "git@github.com:cnry/fleek-parser.git",
-    "fleek-router": "git@github.com:cnry/fleek-router.git",
-    "fleek-validator": "git@github.com:cnry/fleek-validator.git",
+    "fleek-router": "git@github.com:cnry/fleek-router.git#config-generator-fix",
+    "fleek-validator": "git@github.com:cnry/fleek-validator.git#fix-path-params",
     "koa": "^1.1.2",
     "koa-compose": "^2.3.0",
     "koa-swagger-docs": "git@github.com:cnry/koa-swagger-docs.git",
