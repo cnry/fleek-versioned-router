@@ -1,17 +1,16 @@
 'use strict';
 
 const _ = require('lodash'),
-      buildConfig = require('./config'),
       compose = require('koa-compose'),
+      docs = require('./docs'),
+      docsroot = require('./docsroot'),
       fleekRouter = require('fleek-router'),
       helpers = require('./helpers'),
       koa = require('koa'),
       path = require('path'),
-      swaggerDocs = require('koa-swagger-docs'),
       url = require('url');
 
-
-// Gets a spec from a file path, also performing minor validation.
+// Gets a spec from a file path.
 function getSpec(specPath) {
     const spec = require(specPath);
     const version = path.basename(specPath, '.json');
@@ -22,6 +21,36 @@ function getSpec(specPath) {
     return spec;
 }
 
+// Builds a spec config for fleek-router.
+function buildConfig(_config, spec) {
+    const config = _.cloneDeep(_config || {});
+    config.swagger = spec;
+
+    // Prepare the docs config if enabled.
+    if (config.docs) {
+        config.docs = docs.config(config.docs, spec);
+    }
+
+    // Turn any existing middleware into an array.
+    if (_.isArray(config.middleware) === false) {
+        if (config.middleware === undefined) {
+            config.middleware = [];
+        } else {
+            config.middleware = [config.middleware];
+        }
+    }
+
+    // Let controllers know about the specs. This will run just before
+    // any specified config.middleware and before controllers.
+    config.middleware.unshift(function *(next) {
+        // Add to this.fleek which gets created by fleek-router
+        this.fleek.swagger = spec;
+        yield next;
+    });
+
+    return config;
+}
+
 // Creates middleware that performs validation, routing,
 // and documentation for a swagger spec.
 function createSpecMiddleware(config) {
@@ -29,7 +58,7 @@ function createSpecMiddleware(config) {
 
     // Add documentation.
     if (config.docs) {
-        app.use(swaggerDocs(_.cloneDeep(config.docs)));
+        app.use(docs.middleware(config.docs));
     }
 
     // Add validation and routing.
@@ -38,32 +67,10 @@ function createSpecMiddleware(config) {
     return compose(app.middleware);
 }
 
-// Creates middleware that serves a documentation index page.
-function createDocsRootMiddleware(config, urls) {
-    return function* (next) {
-        if (helpers.removeTrailingSlash(this.path) == config.docs.root) {
-            const body = {};
-            let base = helpers.removeTrailingSlash(
-                url.resolve(this.request.href, '/')
-            );
-            _.forEach(config.swaggerVersions, function (spec) {
-                const version = spec.info.version,
-                      result = {};
-                _.map(urls[version], function(_path, key) {
-                    result[key] = base + _path;
-                });
-                body[version] = result;
-            });
-            this.body = body;
-        }
-        yield next;
-    }
-}
-
 // Creates middleware that handles all swagger specs.
 function createMiddleware(config) {
-    const middlewares = [],
-          docsRootUrls = {};
+    const middlewares = [];
+    const docsRootUrls = {};
 
     if (config.docs === true) {
         config.docs =  {
@@ -87,7 +94,7 @@ function createMiddleware(config) {
         middlewares.push(createSpecMiddleware(specConfig));
 
         // Also keep track of URLs for the docs root page.
-        if (config.docs) {
+        if (config.docs && config.docs.root) {
             docsRootUrls[spec.info.version] = {
                 docs: specConfig.docs.paths.docs,
                 spec: specConfig.docs.paths.spec
@@ -95,9 +102,9 @@ function createMiddleware(config) {
         }
     });
 
-    // Create middleware to handle the main docs URL.
-    if (config.docs) {
-        middlewares.push(createDocsRootMiddleware(config, docsRootUrls));
+    // Create middleware to handle the docs root page.
+    if (config.docs && config.docs.root) {
+        middlewares.push(docsroot(config, docsRootUrls));
     }
 
     // Combine them all into one middleware.
