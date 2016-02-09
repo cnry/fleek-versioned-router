@@ -23,6 +23,11 @@ function createModelValidator(spec) {
 
     // Validates and returns a model, or throws a validation error.
     return function(modelName, obj) {
+        if (spec.definitions[modelName] === undefined) {
+            throw new ModelValidationError(
+                modelName, ["model not found in definitions"]
+            );
+        }
         const validation = spec.validateModel(modelName, obj);
         if (validation.valid) {
             return obj;
