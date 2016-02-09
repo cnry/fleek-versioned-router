@@ -3,7 +3,7 @@
 function* mock(next) {
     console.log(this.path, this.fleek.swagger.info.version);
     this.body = this.fleek.validateModel('Pet', {
-        id: 'a',
+        id: this.params.petId || 0,
         name: 'dog',
         photoUrls: []
     });

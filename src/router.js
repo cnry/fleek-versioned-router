@@ -5,6 +5,7 @@ const _ = require('lodash'),
       docs = require('./docs'),
       docsroot = require('./docsroot'),
       fleekRouter = require('fleek-router'),
+      headers = require('./headers'),
       helpers = require('./helpers'),
       koa = require('koa'),
       models = require('./models'),
@@ -92,6 +93,11 @@ function createMiddleware(config) {
     config.swaggerVersions = _.map(config.swaggerVersions, function (spec) {
         return _.isString(spec) ? getSpec(spec) : spec;
     })
+
+    // Create middleware to handle version HTTP headers. This must be
+    // before the spec middleware because it alters the request path
+    // to change which route gets used.
+    middlewares.push(headers(config));
 
     // Create one middleware per spec version.
     _.map(config.swaggerVersions, function (spec) {
