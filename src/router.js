@@ -32,6 +32,11 @@ function buildConfig(_config, spec) {
         config.docs = docs.config(config.docs, spec);
     }
 
+    // Add model validation middleware if enabled.
+    if (config.models) {
+        config.response = models(spec);
+    }
+
     // Turn any existing middleware into an array.
     if (_.isArray(config.middleware) === false) {
         if (config.middleware === undefined) {
@@ -39,12 +44,6 @@ function buildConfig(_config, spec) {
         } else {
             config.middleware = [config.middleware];
         }
-    }
-
-    // Add model validation middleware if enabled.
-    if (config.models) {
-        const modelValidationMiddleware = models(spec);
-        config.middleware.unshift(modelValidationMiddleware);
     }
 
     // Let controllers know about the specs. This will run just before
