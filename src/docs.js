@@ -14,7 +14,7 @@ function preparePath(_path, version) {
 
 // Builds a config for the middleware.
 function buildConfig(_config, spec) {
-    const config = _config == true ? {} : _.cloneDeep(_config);
+    const config = _config === true ? {} : _.cloneDeep(_config);
 
     config.spec = spec
     config.paths = config.paths || {};

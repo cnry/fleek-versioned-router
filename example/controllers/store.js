@@ -1,7 +1,9 @@
 'use strict';
 
-function* mock() {
+function* mock(next) {
+    console.log(this.path, this.fleek.swagger.info.version);
     this.body = 'version ' + this.fleek.swagger.info.version;
+    yield next;
 }
 
 module.exports.delete = mock;

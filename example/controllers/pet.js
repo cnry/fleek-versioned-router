@@ -1,7 +1,13 @@
 'use strict';
 
-function* mock() {
-    this.body = 'version ' + this.fleek.swagger.info.version;
+function* mock(next) {
+    console.log(this.path, this.fleek.swagger.info.version);
+    this.body = this.fleek.validateModel('Pet', {
+        id: 1,
+        name: 'dog',
+        photoUrls: []
+    });
+    yield next;
 }
 
 module.exports.delete = mock;

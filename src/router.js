@@ -7,6 +7,7 @@ const _ = require('lodash'),
       fleekRouter = require('fleek-router'),
       helpers = require('./helpers'),
       koa = require('koa'),
+      models = require('./models'),
       path = require('path'),
       url = require('url');
 
@@ -38,6 +39,12 @@ function buildConfig(_config, spec) {
         } else {
             config.middleware = [config.middleware];
         }
+    }
+
+    // Add model validation middleware if enabled.
+    if (config.models) {
+        const modelValidationMiddleware = models(spec);
+        config.middleware.unshift(modelValidationMiddleware);
     }
 
     // Let controllers know about the specs. This will run just before
