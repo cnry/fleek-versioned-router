@@ -10,11 +10,18 @@ const specs = glob.sync(path.join(__dirname, 'specs', '*.json'));
 const controllers = path.join(__dirname, 'controllers')
 
 app.use(router({
-    swaggerVersions: specs,
-    controllers: controllers,
+    swaggerVersions: specs,  // swagger spec filenames
+    controllers: controllers,  // controllers directory
     docs: true, // swagger-ui documentation
     validate: true, // request validation
-    models: true // model validation support
+    models: true, // model validation support
+    middleware: function*(next) {
+        // Add shortcuts for the relevant spec version.
+        this.spec = this.fleek.swagger;
+        this.version = this.spec.info.version;
+        this.model = this.fleek.validateModel;
+        yield next;
+    }
 }));
 
 app.use(function* (next) {
