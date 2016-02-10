@@ -5,7 +5,8 @@
   "repository": "https://github.com/cnry/fleek-versioned-router",
   "main": "src/router.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --harmony example/app.js",
+    "test": "node --harmony tests | faucet"
   },
   "keywords": [
     "fleek",
@@ -28,6 +29,10 @@
     "swagger-model-validator": "^2.0.7"
   },
   "devDependencies": {
-    "glob": "^6.0.4"
+    "faucet": "0.0.1",
+    "glob": "^6.0.4",
+    "supertest-koa-agent": "^0.2.1",
+    "tape": "^4.4.0",
+    "tape-chai": "^1.1.0"
   }
 }

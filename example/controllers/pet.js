@@ -1,12 +1,20 @@
 'use strict';
 
 function* mock(next) {
-    console.log(this.path, this.fleek.swagger.info.version);
-    this.body = this.fleek.validateModel('Pet', {
-        id: this.params.petId || 0,
-        name: 'dog',
-        photoUrls: []
-    });
+    if (this.params.petId == '1') {
+        this.body = this.fleek.validateModel('Pet', {
+            id: 1,
+            name: 'dog',
+            photoUrls: [],
+            version: this.fleek.swagger.info.version
+        });
+    } else if (this.params.petId == '2') {
+        this.body = this.fleek.validateModel('Pet', {
+            id: 'abc',
+            name: 'cat',
+            photoUrls: []
+        });
+    }
     yield next;
 }
 
