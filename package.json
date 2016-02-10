@@ -6,7 +6,7 @@
   "main": "src/router.js",
   "scripts": {
     "start": "node --harmony example/app.js",
-    "test": "node --harmony tests | faucet"
+    "test": "node --harmony tests | tap-spec"
   },
   "keywords": [
     "fleek",
@@ -29,10 +29,10 @@
     "swagger-model-validator": "^2.0.7"
   },
   "devDependencies": {
-    "faucet": "0.0.1",
+    "chai": "^3.5.0",
     "glob": "^6.0.4",
     "supertest-koa-agent": "^0.2.1",
-    "tape": "^4.4.0",
-    "tape-chai": "^1.1.0"
+    "tap-spec": "^4.1.1",
+    "tape": "^4.4.0"
   }
 }

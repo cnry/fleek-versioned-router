@@ -2,35 +2,32 @@
 
 const agent = require('supertest-koa-agent'),
       app = require('../../example/app'),
-      test = require('../');
+      expect = require('chai').expect,
+      test = require('tape');
 
-test('GET /pet/1 with valid X-Api-Version should return a pet', function(assert) {
+test('headers', function(assert) {
     assert.plan(2);
     agent(app)
         .get('/pet/1')
         .set('X-Api-Version', '1.0.0')
-        .expect(200)
         .end(function(err, res) {
-            assert.equal(err, null, err);
-            const expectedBody =  {
+            expect(err).to.be.null;
+            expect(res.status).to.equal(200);
+            expect(res.body).to.deep.equal({
                 id: 1,
                 name: 'dog',
                 photoUrls: [],
                 version: '1.0.0'
-            };
-            assert.deepEqual(res.body, expectedBody);
+            });
+            assert.pass('GET /pet/1 with valid X-Api-Version should return a pet');
         });
-});
-
-test('GET /pet/1 with invalid X-Api-Version should return error 400', function(assert) {
-    assert.plan(2);
     agent(app)
         .get('/pet/1')
         .set('X-Api-Version', '3.0.0')
-        .expect(400)
         .end(function(err, res) {
-            assert.equal(err, null, err);
-            const expectedBody = {
+            expect(err).to.be.null;
+            expect(res.status).to.equal(400);
+            expect(res.body).to.deep.equal({
                 error: 'Validation Failed',
                 error_name: 'VALIDATION_FAILED',
                 details: [{
@@ -45,7 +42,7 @@ test('GET /pet/1 with invalid X-Api-Version should return error 400', function(a
                         enum: ['1.0.0', '2.0.0']
                     }
                 }]
-            };
-            assert.deepEqual(res.body, expectedBody);
+            });
+            assert.pass('GET /pet/1 with invalid X-Api-Version should return error 400');
         });
 });

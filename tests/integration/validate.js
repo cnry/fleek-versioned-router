@@ -2,17 +2,17 @@
 
 const agent = require('supertest-koa-agent'),
       app = require('../../example/app'),
-      test = require('../');
+      expect = require('chai').expect,
+      test = require('tape');
 
-test('GET /api/1.0.0/pet/abc should return error 400', function(assert) {
-    // because abc is an invalid id
+test('validator', function(assert) {
     assert.plan(2);
     agent(app)
         .get('/api/1.0.0/pet/abc')
-        .expect(400)
         .end(function(err, res) {
-            assert.equal(err, null, err);
-            const expectedBody = {
+            expect(err).to.be.null;
+            expect(res.status).to.equal(400);
+            expect(res.body).to.deep.equal({
                 error: 'Validation Failed',
                 error_name: 'VALIDATION_FAILED',
                 details: [{
@@ -28,27 +28,22 @@ test('GET /api/1.0.0/pet/abc should return error 400', function(assert) {
                         format: 'int64'
                     }
                 }]
-            };
-            assert.deepEqual(res.body, expectedBody);
+            });
+            assert.pass('GET /api/1.0.0/pet/abc should return error 400');
         });
-});
-
-test('GET /api/1.0.0/pet/2 should return error 500', function(assert) {
-    // because the example controller purposefully uses invalid data for id=2
-    assert.plan(2);
     agent(app)
         .get('/api/1.0.0/pet/2')
-        .expect(500)
         .end(function(err, res) {
-            assert.equal(err, null);
-            const expectedBody = {
+            expect(err).to.be.null;
+            expect(res.status).to.equal(500);
+            expect(res.body).to.deep.equal({
                 error: 'Response Validation Failed',
                 error_name: 'RESPONSE_VALIDATION_FAILED',
                 details: [{
                     model: 'Pet',
                     errors: ['id (abc) is not a type of int64']
                 }]
-            };
-            assert.deepEqual(res.body, expectedBody);
+            });
+            assert.pass('GET /api/1.0.0/pet/2 should return error 500');
         });
 });
