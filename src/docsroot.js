@@ -8,7 +8,7 @@ const _ = require('lodash'),
 // Creates middleware that serves a documentation index page.
 function createDocsRootMiddleware(config, urls) {
     return function* (next) {
-        if (helpers.removeTrailingSlash(this.path) == config.docs.root) {
+        if (helpers.removeTrailingSlash(this.path) == config.documentation.root) {
             const body = {};
             let base = helpers.removeTrailingSlash(
                 url.resolve(this.request.href, '/')

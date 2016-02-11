@@ -18,6 +18,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "defined": "^1.0.0",
     "fleek-router": "^1.0.1",
     "fleek-validator": "^0.5.9",
     "koa": "^1.1.2",

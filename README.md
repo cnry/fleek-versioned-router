@@ -34,7 +34,7 @@ const controllers = path.join(__dirname, 'controllers')
 app.use(router({
     swaggerVersions: specs,  // swagger spec filenames
     controllers: controllers,  // controllers directory
-    docs: true, // swagger-ui documentation
+    documentation: true, // swagger-ui documentation
     validate: true, // request validation
     models: true // model validation support
 }));
@@ -61,7 +61,7 @@ The configuration options are almost the same as in
 with some key differences:
 
 1. Must set `config.swaggerVersions` instead of `config.swagger`
-1. Optionally set `config.docs` instead of `config.documentation`
+1. Optionally set `config.documentation` with different options
 1. Optionally set `config.models` to enable a model validation
 
 ### config.swaggerVersions
@@ -80,14 +80,15 @@ set `config.swaggerVersions` to specify a list of swagger specs.
 config.swaggerVersions = ['specs/v1.json', 'specs/v2.json'];
 ```
 
-### config.docs
+### config.documentation
 
 #### optional
 
-Rather than setting `config.documentation` as in,
+The `config.documentation` setting is different to
 [fleek-router](https://github.com/fleekjs/fleek-router)
-set `config.docs` to enable the following documentation features
-for all spec versions.
+as some changes were needed to support multiple spec versions.
+
+Enabling this will provide:
 
 * documentation root endpoint
     * returns all swagger spec versions and their relevant URLs as JSON
@@ -104,12 +105,10 @@ for all spec versions.
 
 ```javascript
 // true defaults to the following:
-config.docs = {
+config.documentation = {
     root: '/api',
-    paths: {
-        docs: '/docs/:version',
-        spec: '/api/:version'
-    }
+    docs: '/docs/:version', // :version gets substituted
+    spec: '/api/:version' // :version gets substituted
 };
 ```
 

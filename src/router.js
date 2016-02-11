@@ -2,6 +2,7 @@
 
 const _ = require('lodash'),
       compose = require('koa-compose'),
+      defined = require('defined'),
       docs = require('./docs'),
       docsroot = require('./docsroot'),
       fleekRouter = require('fleek-router'),
@@ -28,9 +29,14 @@ function buildConfig(_config, spec) {
     const config = _.cloneDeep(_config || {});
     config.swagger = spec;
 
-    // Prepare the docs config if enabled.
-    if (config.docs) {
-        config.docs = docs.config(config.docs, spec);
+    // Prepare the documentation config if enabled.
+    if (config.documentation) {
+        config.documentation.docs = helpers.versionedPath(
+            defined(config.documentation.docs, '/docs/:version'), spec.info.version
+        );
+        config.documentation.spec = helpers.versionedPath(
+            defined(config.documentation.spec, '/api/:version'), spec.info.version
+        );
     }
 
     // Add model validation middleware if enabled.
@@ -64,8 +70,8 @@ function createSpecMiddleware(config) {
     const app = koa();
 
     // Add documentation.
-    if (config.docs) {
-        app.use(docs.middleware(config.docs));
+    if (config.documentation) {
+        app.use(docs(config));
     }
 
     // Add validation and routing.
@@ -79,13 +85,9 @@ function createMiddleware(config) {
     const middlewares = [];
     const docsRootUrls = {};
 
-    if (config.docs === true) {
-        config.docs =  {
-            root: '/api',
-            paths: {
-                docs: '/docs/:version',
-                spec: '/api/:version'
-            }
+    if (config.documentation === true) {
+        config.documentation =  {
+            root: '/api'
         };
     }
 
@@ -106,16 +108,16 @@ function createMiddleware(config) {
         middlewares.push(createSpecMiddleware(specConfig));
 
         // Also keep track of URLs for the docs root page.
-        if (config.docs && config.docs.root) {
+        if (config.documentation && config.documentation.root) {
             docsRootUrls[spec.info.version] = {
-                docs: specConfig.docs.paths.docs,
-                spec: specConfig.docs.paths.spec
+                docs: specConfig.documentation.docs,
+                spec: specConfig.documentation.spec
             };
         }
     });
 
     // Create middleware to handle the docs root page.
-    if (config.docs && config.docs.root) {
+    if (config.documentation && config.documentation.root) {
         middlewares.push(docsroot(config, docsRootUrls));
     }
 

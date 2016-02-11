@@ -12,7 +12,7 @@ const controllers = path.join(__dirname, 'controllers')
 app.use(router({
     swaggerVersions: specs,  // swagger spec filenames
     controllers: controllers,  // controllers directory
-    docs: true, // swagger-ui documentation
+    documentation: true, // swagger-ui documentation
     validate: true, // request validation
     models: true, // model validation support
     middleware: function*(next) {
