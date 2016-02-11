@@ -3,7 +3,7 @@
 This extends [fleek-router](https://github.com/fleekjs/fleek-router)
 to use multiple swagger spec versions.
 
-Each swagger spec file should use a different `basePath` values.
+Each swagger spec file should use a different `basePath` value.
 
 Requests for API versions can be made using an API's `basePath`,
 or by sending an `X-Api-Version` header.
@@ -50,9 +50,9 @@ for more about how controllers and routes work.
 fleek-versioned-router is able to work because **different specs have
 different values for `basePath`**. The behavior is unknown when paths clash.
 
-In fleek-versioned-router, a controller might be called by more than one spec.
-To find out which one was used for a request, access `this.fleek.swagger`
-from within the controller.
+In fleek-versioned-router, a controller might be called by more than one
+swagger spec. To find out which one was used for a request, access
+`this.fleek.swagger` from within the controller.
 
 ## Configuration
 
@@ -62,7 +62,7 @@ with some key differences:
 
 1. Must set `config.swaggerVersions` instead of `config.swagger`
 1. Optionally set `config.documentation` with different options
-1. Optionally set `config.models` to enable a model validation
+1. Optionally set `config.models` to enable a model validation helper
 
 ### config.swaggerVersions
 
@@ -70,7 +70,7 @@ with some key differences:
 
 Rather than setting `config.swagger` as in
 [fleek-router](https://github.com/fleekjs/fleek-router#configswagger),
-set `config.swaggerVersions` to specify a list of swagger specs.
+use `config.swaggerVersions` to specify a list of swagger specs.
 
 #### accepts
 
@@ -86,16 +86,16 @@ config.swaggerVersions = ['specs/v1.json', 'specs/v2.json'];
 
 The `config.documentation` setting is different to
 [fleek-router](https://github.com/fleekjs/fleek-router)
-as some changes were needed to support multiple spec versions.
+in order to support multiple spec versions.
 
 Enabling this will provide:
 
 * documentation root endpoint
     * returns all swagger spec versions and their relevant URLs as JSON
 * spec file endpoint for each version
-    * returns a swagger spec
+    * returns a swagger spec as JSON
 * swagger-ui endpoint for each version
-    * [swagger-ui](https://github.com/swagger-api/swagger-ui)
+    * uses [swagger-ui](https://github.com/swagger-api/swagger-ui)
       for browsing/testing a swagger spec version
 
 #### accepts
@@ -116,11 +116,12 @@ config.documentation = {
 
 #### optional
 
-Enable this for model validation features.
+Enable this to add a model validation helper function
+to the controller context.
 
 #### accepts
 
-* `Boolean` - if set to true, enables model validation features
+* `Boolean` - if set to true, enables the model validation helper
 
 #### usage in controllers
 
