@@ -1,12 +1,15 @@
 {
   "name": "fleek-versioned-router",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Extends fleek-router to use multiple swagger spec versions",
-  "repository": "https://github.com/cnry/fleek-versioned-router",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cnry/fleek-versioned-router.git"
+  },
   "main": "src/router.js",
   "scripts": {
     "start": "node --harmony example/app.js",
-    "test": "node --harmony tests | tap-spec"
+    "test": "node --harmony tests | tap-summary"
   },
   "keywords": [
     "fleek",
@@ -31,9 +34,18 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "co-supertest": "0.0.10",
     "glob": "^6.0.4",
-    "supertest-koa-agent": "^0.2.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.4.0"
-  }
+    "red-tape": "0.0.2",
+    "tap-summary": "^1.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/cnry/fleek-versioned-router/issues"
+  },
+  "homepage": "https://github.com/cnry/fleek-versioned-router",
+  "directories": {
+    "example": "example",
+    "test": "tests"
+  },
+  "author": "Raymond Butcher"
 }
