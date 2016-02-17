@@ -1,21 +1,25 @@
 # fleek-versioned-router
 
+Koa middleware that automatically handles routing, validation, and
+documentation for multiple Swagger spec versions.
+
 This extends [fleek-router](https://github.com/fleekjs/fleek-router)
-to use multiple swagger spec versions.
+to use multiple Swagger spec files simultaneously.
 
-Each swagger spec file should use a different `basePath` value.
+Each Swagger spec file should have a different `version` and `basePath` value.
+Requests for different versions can be made incorporating the `basePath` into
+the URL, or by sending an `X-Api-Version` header.
 
-Requests for API versions can be made using an API's `basePath`,
-or by sending an `X-Api-Version` header.
-
-For example, with `basePath: /api/1.0.0` in a swagger spec:
+For example, with `basePath: /api/1.0.0` in a Swagger spec:
 
 * `curl http://localhost:3000/api/1.0.0/pet/1`
 * `curl -H "X-Api-Version: 1.0.0" http://localhost:3000/pet/1`
 
 ## Installation
 
-This is not on NPM yet!
+```
+npm install --save fleek-versioned-router
+```
 
 ## Example
 
@@ -51,7 +55,7 @@ fleek-versioned-router is able to work because **different specs have
 different values for `basePath`**. The behavior is unknown when paths clash.
 
 In fleek-versioned-router, a controller might be called by more than one
-swagger spec. To find out which one was used for a request, access
+Swagger spec. To find out which one was used for a request, access
 `this.fleek.swagger` from within the controller.
 
 ## Configuration
@@ -74,7 +78,7 @@ use `config.swaggerVersions` to specify a list of swagger specs.
 
 #### accepts
 
-* `Array` - list of paths for the swagger specs
+* `Array` - list of paths for the Swagger specs
 
 ```javascript
 config.swaggerVersions = ['specs/v1.json', 'specs/v2.json'];
@@ -91,12 +95,12 @@ in order to support multiple spec versions.
 Enabling this will provide:
 
 * documentation root endpoint
-    * returns all swagger spec versions and their relevant URLs as JSON
+    * returns all Swagger spec versions and their relevant URLs as JSON
 * spec file endpoint for each version
-    * returns a swagger spec as JSON
+    * returns a Swagger spec as JSON
 * swagger-ui endpoint for each version
     * uses [swagger-ui](https://github.com/swagger-api/swagger-ui)
-      for browsing/testing a swagger spec version
+      for browsing/testing a Swagger spec version
 
 #### accepts
 
@@ -165,3 +169,18 @@ npm start
 ```
 
 There are also Make commands, see the [Makefile](Makefile) to find out more.
+
+## Contributing
+
+1. Fork the repository
+1. Create a branch
+1. Make your changes, with tests
+1. Run tests with `npm test`
+1. Submit a pull request
+
+## Credits
+
+This has been brought to you by
+[Canary](https://canary.is/)
+and
+[Bashton](http://www.bashton.com/).

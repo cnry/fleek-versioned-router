@@ -45,6 +45,7 @@
   "homepage": "https://github.com/cnry/fleek-versioned-router",
   "directories": {
     "example": "example",
+    "lib": "src",
     "test": "tests"
   },
   "author": "Raymond Butcher"
