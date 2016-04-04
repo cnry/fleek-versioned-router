@@ -72,6 +72,10 @@ function createSpecMiddleware(config) {
     // Add documentation.
     if (config.documentation) {
         app.use(docs(config));
+        // Remove documentation from config so fleek-router
+        // does not add its own documentation routes.
+        config = _.cloneDeep(config);
+        delete config.documentation
     }
 
     // Add validation and routing.
